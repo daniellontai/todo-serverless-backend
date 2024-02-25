@@ -13,7 +13,12 @@ const ERROR_CODE_DBCONN_FAILED = 4;
 app = express();
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+    origin: '*',
+    methods: '*',
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+}));
 // Add headers before the routes are defined
 app.use(function (req, res, next) {
     // Cache control for Vercel, todo check
