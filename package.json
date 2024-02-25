@@ -7,8 +7,6 @@
     "prisma": "^5.9.1"
   },
   "scripts": {
-    "start": "echo 'start'",
-    "postinstall": "npx prisma generate",
-    "prepublish": "npx prisma migrate deploy"
+    "start": "echo 'start'"
   }
 }
