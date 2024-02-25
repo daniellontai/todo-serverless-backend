@@ -8,6 +8,7 @@
   },
   "scripts": {
     "start": "npm run migrate:postgres",
+    "postinstall": "npx prisma generate",
     "migrate:postgres": "npx prisma migrate deploy"
   }
 }
