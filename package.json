@@ -7,8 +7,8 @@
     "prisma": "^5.9.1"
   },
   "scripts": {
-    "start": "npm run migrate:postgres",
+    "start": "echo 'start'",
     "postinstall": "npx prisma generate",
-    "migrate:postgres": "npx prisma migrate deploy"
+    "prepublish": "npx prisma migrate deploy"
   }
 }
