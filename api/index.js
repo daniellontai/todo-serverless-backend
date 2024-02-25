@@ -20,12 +20,12 @@ app.use(cors({
     credentials: true,
 }));
 // Add headers before the routes are defined
-/*app.use(function (req, res, next) {
+app.use(function (req, res, next) {
     // Cache control for Vercel, todo check
-    //res.setHeader('Cache-Control', 's-max-age=3600, stale-while-revalidate');
+    res.setHeader('Cache-Control', 's-max-age=3600, stale-while-revalidate');
     // Pass to next layer of middleware
     next();
-});*/
+});
 
 app.get('/api', (req, res) => {
     res.sendStatus(400);
@@ -40,7 +40,7 @@ app.get('/api/tasks', async (req, res) => {
         });
         res.json(tasks);
     } catch (error) {
-        sendPrismaErrorResponse(res, {code: ERROR_CODE_DBCONN_FAILED, message: "Database connection unsuccessful. Please ensure that the database server is running and that the credentials are correct."});
+        sendPrismaErrorResponse(res, {error: error, code: ERROR_CODE_DBCONN_FAILED, message: "Database connection unsuccessful. Please ensure that the database server is running and that the credentials are correct."});
     }
 })
 
