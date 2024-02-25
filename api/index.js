@@ -3,6 +3,7 @@ const { PrismaClient } = require('@prisma/client');
 const express = require('express');
 const prisma = new PrismaClient();
 const path = require("path");
+const cors = require('cors');
 
 const ERROR_CODE_DESCRIPTION_NOT_SET = 1;
 const ERROR_CODE_COMPLETE_NOT_SET = 2;
@@ -10,29 +11,13 @@ const ERROR_CODE_UNEXPECTED_TYPE = 3;
 const ERROR_CODE_DBCONN_FAILED = 4;
 
 app = express();
-app.use(express.json());
-//serve react static build or node fallback
-app.use(express.static(path.join(__dirname, "..", "build")));
-app.use(express.static("public"));
 
+app.use(express.json());
+app.use(cors());
 // Add headers before the routes are defined
 app.use(function (req, res, next) {
-    // Cache control for Vercel
+    // Cache control for Vercel, todo check
     res.setHeader('Cache-Control', 's-max-age=3600, stale-while-revalidate');
-
-    // Website you wish to allow to connect
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5000');
-
-    // Request methods you wish to allow
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-
-    // Request headers you wish to allow
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-
-    // Set to true if you need the website to include cookies in the requests sent
-    // to the API (e.g. in case you use sessions)
-    res.setHeader('Access-Control-Allow-Credentials', true);
-
     // Pass to next layer of middleware
     next();
 });
