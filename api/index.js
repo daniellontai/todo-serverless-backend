@@ -1,17 +1,14 @@
 require('dotenv').config()
-const rateLimit = require('express-rate-limit')
-const postgresStores = require('@acpr/rate-limit-postgresql')
-//import { rateLimit } from 'express-rate-limit'
-const { PrismaClient } = require('@prisma/client');
+const { prisma } = require("../prisma/initDb.js");
+const rateLimiterMiddleware = require('../middleware/rateLimiterPrisma.js');
 const express = require('express');
-const prisma = new PrismaClient();
-const path = require("path");
 const cors = require('cors');
 
 const ERROR_CODE_DESCRIPTION_NOT_SET = 1;
 const ERROR_CODE_COMPLETE_NOT_SET = 2;
 const ERROR_CODE_UNEXPECTED_TYPE = 3;
 const ERROR_CODE_DBCONN_FAILED = 4;
+
 
 app = express();
 
@@ -22,32 +19,15 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
 }));
-// Add headers before the routes are defined
+
+// Add headers
 app.use((req, res, next) => {
-    // Cache control for Vercel, todo check
+    // Cache control for Vercel, todo check if this does anything
     res.setHeader('Cache-Control', 's-max-age=3600, stale-while-revalidate');
     next();
 });
 
-const limiter = rateLimit({
-	windowMs: 1 * 60 * 1000, // 1 minute
-	limit: 30, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
-	standardHeaders: 'draft-7', // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
-	legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
-	store: new postgresStores.PostgresStore(
-		{
-			user: process.env.POSTGRES_USER,
-			password: process.env.POSTGRES_PASSWORD,
-			host: process.env.POSTGRES_HOST,
-			database: process.env.POSTGRES_DATABASE,
-            port: parseInt(process.env.POSTGRES_PORT),
-            sslmode: 'require'
-		},
-		'aggregated_store',
-	)
-})
-
-app.use(limiter)
+app.use(rateLimiterMiddleware);
 
 app.get('/api', (req, res) => {
     res.sendStatus(400);
@@ -168,7 +148,7 @@ app.delete('/api/task/:id', async (req, res) => {
 //     console.log(`Application listening on port ${process.env.NODE_PORT || 3000}`)
 // })
 
-console.log(app);
+//console.log(app);
 module.exports = app;
 
 
