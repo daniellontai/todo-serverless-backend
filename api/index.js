@@ -1,6 +1,7 @@
 require('dotenv').config()
-const { prisma } = require("../prisma/initDb.js");
+const { prisma } = require('../prisma/initDb.js');
 const rateLimiterMiddleware = require('../middleware/rateLimiterPrisma.js');
+const setHeadersMiddleware = require('../middleware/setHeaders.js');
 const express = require('express');
 const cors = require('cors');
 
@@ -9,27 +10,23 @@ const ERROR_CODE_COMPLETE_NOT_SET = 2;
 const ERROR_CODE_UNEXPECTED_TYPE = 3;
 const ERROR_CODE_DBCONN_FAILED = 4;
 
-
 app = express();
-
 app.disable('x-powered-by');
 
 app.use(express.json());
 
+// Add CORS
 app.use(cors({
-    origin: '*',
-    methods: '*',
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    origin: 'https://todo-react-frontend-teal.vercel.app/',
+    methods: 'GET,OPTIONS,PATCH,DELETE,POST',
+    allowedHeaders: 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version',
     credentials: true,
 }));
 
 // Add headers
-app.use((req, res, next) => {
-    // Cache control for Vercel, todo check if this does anything
-    res.setHeader('Cache-Control', 's-max-age=3600, stale-while-revalidate');
-    next();
-});
+app.use(setHeadersMiddleware);
 
+// Add rate limiter with Postgres store
 app.use(rateLimiterMiddleware);
 
 app.get('/api', (req, res) => {

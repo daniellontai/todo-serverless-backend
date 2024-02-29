@@ -1,3 +1,4 @@
+require('dotenv').config()
 const { prisma } = require("../prisma/initDb.js");
 const { RateLimiterPrisma, RateLimiterMemory } = require('rate-limiter-flexible');
 const { ipAddress/*, next*/ } = require('@vercel/edge');
@@ -9,8 +10,8 @@ const rateLimiterMemory = new RateLimiterMemory({
 
 const rateLimiter = new RateLimiterPrisma({
     storeClient: prisma,
-    points: 20, // Number of points (requests) allowed
-    duration: 5, // seconds
+    points: process.env.RL_POINTS, // Number of points (requests) allowed
+    duration: process.env.RL_DURATION_SECONDS,
     insuranceLimiter: rateLimiterMemory,
     tableName: 'RateLimiter',
 });
