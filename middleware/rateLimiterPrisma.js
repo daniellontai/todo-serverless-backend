@@ -10,7 +10,7 @@ const rateLimiter = new RateLimiterPrisma({
     storeClient: prisma,
     points: 20, // Number of points (requests) allowed
     duration: 5, // seconds
-    insuranceLimiter: rateLimiterMemory,
+    //insuranceLimiter: rateLimiterMemory,
     tableName: 'RateLimiter',
 });
 

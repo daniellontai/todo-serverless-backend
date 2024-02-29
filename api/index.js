@@ -12,7 +12,10 @@ const ERROR_CODE_DBCONN_FAILED = 4;
 
 app = express();
 
+app.disable('x-powered-by');
+
 app.use(express.json());
+
 app.use(cors({
     origin: '*',
     methods: '*',
