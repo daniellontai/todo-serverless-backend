@@ -1,5 +1,6 @@
 const { prisma } = require("../prisma/initDb.js");
 const { RateLimiterPrisma, RateLimiterMemory } = require('rate-limiter-flexible');
+import { ipAddress, next as vercelNext } from '@vercel/edge'
 
 const rateLimiterMemory = new RateLimiterMemory({
     points: 1, // if there are 5 workers
@@ -15,7 +16,8 @@ const rateLimiter = new RateLimiterPrisma({
 });
 
 const rateLimiterMiddleware = (req, res, next) => {
-    rateLimiter.consume(req.ip)
+    const ip = ipAddress(request) || '127.0.0.9'
+    rateLimiter.consume(ip)
       .then(() => {
         next();
       })
