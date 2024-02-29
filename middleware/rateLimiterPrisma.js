@@ -11,6 +11,7 @@ const rateLimiter = new RateLimiterPrisma({
     points: 20, // Number of points (requests) allowed
     duration: 5, // seconds
     insuranceLimiter: rateLimiterMemory,
+    tableName: 'RateLimiter',
 });
 
 const rateLimiterMiddleware = (req, res, next) => {

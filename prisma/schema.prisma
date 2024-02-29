@@ -18,3 +18,9 @@ model Task {
 
   @@map("task")
 }
+
+model RateLimiter {
+  key     String   @id
+  points  Int
+  expire  DateTime?
+}
