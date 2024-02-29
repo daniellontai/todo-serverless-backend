@@ -17,6 +17,7 @@ const rateLimiter = new RateLimiterPrisma({
 
 const rateLimiterMiddleware = (req, res, next) => {
     const newReq = { ...req };
+    newReq.headers = { ...req.header };
     newReq.headers.get = (key) => req.get(key);
     const ip = ipAddress(newReq) || 'no-ip';
     rateLimiter.consume(ip)

@@ -45,19 +45,19 @@ app.get('/api/tasks', async (req, res) => {
         });
         res.json(tasks);
     } catch (error) {
-        sendPrismaErrorResponse(res, {error: error, code: ERROR_CODE_DBCONN_FAILED, message: "Database connection unsuccessful. Please ensure that the database server is running and that the credentials are correct."});
+        sendPrismaErrorResponse(res, { error: error, code: ERROR_CODE_DBCONN_FAILED, message: "Database connection unsuccessful. Please ensure that the database server is running and that the credentials are correct." });
     }
 })
 
 app.post('/api/task', async (req, res) => {
-    const {description, complete} = req.body;
-    
+    const { description, complete } = req.body;
+
     let errors = [];
     if (typeof description !== "string") {
-        errors.push({code: ERROR_CODE_DESCRIPTION_NOT_SET, message: "description not set (expected String)"});
+        errors.push({ code: ERROR_CODE_DESCRIPTION_NOT_SET, message: "description not set (expected String)" });
     }
     if (typeof complete !== 'boolean') {
-        errors.push({code: ERROR_CODE_COMPLETE_NOT_SET, message: "complete not set (expected Boolean)"});
+        errors.push({ code: ERROR_CODE_COMPLETE_NOT_SET, message: "complete not set (expected Boolean)" });
     }
     if (errors.length > 0) {
         sendBadDataErrorResponse(res, errors);
@@ -74,7 +74,7 @@ app.post('/api/task', async (req, res) => {
             });
             res.json(create);
         } catch (error) {
-            sendPrismaErrorResponse(res, {code: ERROR_CODE_DBCONN_FAILED, message: "Database connection unsuccessful. Please ensure that the database server is running and that the credentials are correct."});
+            sendPrismaErrorResponse(res, { code: ERROR_CODE_DBCONN_FAILED, message: "Database connection unsuccessful. Please ensure that the database server is running and that the credentials are correct." });
         }
     }
 })
@@ -83,7 +83,7 @@ app.get('/api/task/:id', async (req, res) => {
     let id = parseInt(req.params.id);
 
     if (!Number.isInteger(id)) {
-        sendBadDataErrorResponse(res, {code: ERROR_CODE_UNEXPECTED_TYPE, message: 'id error (expected Int)'});
+        sendBadDataErrorResponse(res, { code: ERROR_CODE_UNEXPECTED_TYPE, message: 'id error (expected Int)' });
         return;
     }
     try {
@@ -94,17 +94,17 @@ app.get('/api/task/:id', async (req, res) => {
         });
         res.json(task);
     } catch (error) {
-        sendPrismaErrorResponse(res, {code: ERROR_CODE_DBCONN_FAILED, message: "Database connection unsuccessful. Please ensure that the database server is running and that the credentials are correct."});
+        sendPrismaErrorResponse(res, { code: ERROR_CODE_DBCONN_FAILED, message: "Database connection unsuccessful. Please ensure that the database server is running and that the credentials are correct." });
     }
 })
 
 app.patch('/api/task/:id', async (req, res) => {
     let id = parseInt(req.params.id);
-    let {description, complete} = req.body;
+    let { description, complete } = req.body;
 
     if (!Number.isInteger(id)) {
-        sendBadDataErrorResponse(res, {code: ERROR_CODE_UNEXPECTED_TYPE, message: 'id error (expected Int)'});
-    }else {
+        sendBadDataErrorResponse(res, { code: ERROR_CODE_UNEXPECTED_TYPE, message: 'id error (expected Int)' });
+    } else {
         let data = {};
         data.id = id;
         if (typeof description === "string") {
@@ -118,7 +118,7 @@ app.patch('/api/task/:id', async (req, res) => {
             const update = await prisma.task.update({
                 data,
                 where: {
-                    id:id
+                    id: id
                 }
             });
             res.json(update);
@@ -132,8 +132,8 @@ app.delete('/api/task/:id', async (req, res) => {
     let id = parseInt(req.params.id);
 
     if (!Number.isInteger(id)) {
-        sendBadDataErrorResponse(res, {code: ERROR_CODE_UNEXPECTED_TYPE, message: 'id error (expected Int)'});
-    }else {
+        sendBadDataErrorResponse(res, { code: ERROR_CODE_UNEXPECTED_TYPE, message: 'id error (expected Int)' });
+    } else {
         try {
             const deleteTask = await prisma.task.delete({
                 where: {
@@ -142,7 +142,7 @@ app.delete('/api/task/:id', async (req, res) => {
             });
             res.json(deleteTask);
         } catch (error) {
-            sendPrismaErrorResponse(res, {code: ERROR_CODE_DBCONN_FAILED, message: "Database connection unsuccessful. Please ensure that the database server is running and that the credentials are correct."});
+            sendPrismaErrorResponse(res, { code: ERROR_CODE_DBCONN_FAILED, message: "Database connection unsuccessful. Please ensure that the database server is running and that the credentials are correct." });
         }
     }
 })
@@ -162,7 +162,7 @@ function sendErrorResponse(response, error, statusCode) {
     } else if (Array.isArray(error)) {
         errorToSend = error;
     }
-    response.status(statusCode).send({error: errorToSend});
+    response.status(statusCode).send({ error: errorToSend });
 }
 
 function sendPrismaErrorResponse(response, error) {
