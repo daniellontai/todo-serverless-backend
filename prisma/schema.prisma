@@ -2,25 +2,50 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+	provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
-  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+	provider = "postgresql"
+	url = env("POSTGRES_PRISMA_URL") // uses connection pooling
+	directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
+// model Task {
+// 	id          BigInt     @id @default(autoincrement())
+// 	description String
+// 	complete    Boolean @default(false)
+
+// 	@@map("task")
+// }
+
+// model List {
+// 	id			String @id @default(cuid())
+// 	createdAt	DateTime @default(dbgenerated())
+
+// 	@@map("list")
+// }
+
 model Task {
-  id          Int     @id @default(autoincrement())
+  id        BigInt    	@id @default(autoincrement())
   description String
-  complete    Boolean @default(false)
+  complete  Boolean		@default(false)
+  listId    String		@default("0")
+  list      List      	@relation(fields: [listId], references: [id])
 
   @@map("task")
 }
 
+model List {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(dbgenerated())
+  tasks     Task[]
+
+  @@map("list")
+}
+
 model RateLimiter {
-  key     String   @id
-  points  Int
-  expire  DateTime?
+	key     String   @id
+	points  Int
+	expire  DateTime?
 }
