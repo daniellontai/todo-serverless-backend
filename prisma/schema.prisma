@@ -12,7 +12,7 @@ datasource db {
 }
 
 model Task {
-	id        	BigInt    	@id @default(autoincrement())
+	id        	Int    	@id @default(autoincrement())
 	description String
 	complete  	Boolean		@default(false)
 	listId    	String		@default("0")
