@@ -38,6 +38,9 @@ app.get('/api/tasks', async (req, res) => {
         const tasks = await prisma.task.findMany({
             orderBy: {
                 id: 'asc',
+            },
+            where: {
+                listId: '0',
             }
         });
         res.json(tasks);
@@ -45,6 +48,66 @@ app.get('/api/tasks', async (req, res) => {
         sendPrismaErrorResponse(res, { error: error, code: ERROR_CODE_DBCONN_FAILED, message: "Database connection unsuccessful. Please ensure that the database server is running and that the credentials are correct." });
     }
 })
+
+app.get('/api/lists', async (req, res) => {
+    try {
+		const lists = await prisma.list.findMany({
+			orderBy: {
+				id: "desc",
+			},
+		});
+		res.json(lists);
+	} catch (error) {
+		sendPrismaErrorResponse(res, {
+			error: error,
+			code: ERROR_CODE_DBCONN_FAILED,
+			message: "Database connection unsuccessful. Please ensure that the database server is running and that the credentials are correct.",
+		});
+	}
+})
+
+app.post('/api/list', async (req, res) => {
+    const { name } = req.body;
+    if (typeof name !== "string") {
+        sendBadDataErrorResponse(res, { code: ERROR_CODE_UNEXPECTED_TYPE, message: "name error (expected String)" });
+        return;
+    }
+    try {
+        const list = await prisma.list.create({
+            data: {
+                name: name
+            }
+        });
+        res.json(list);
+    } catch (error) {
+        sendPrismaErrorResponse(res, {
+            code: ERROR_CODE_DBCONN_FAILED,
+            message: "Database connection unsuccessful. Please ensure that the database server is running and that the credentials are correct.",
+        });
+    }
+})
+
+app.get("/api/tasks/:list", async (req, res) => {
+	let listId = parseInt(req.params.list);
+
+	if (!Number.isInteger(listId)) {
+		sendBadDataErrorResponse(res, { code: ERROR_CODE_UNEXPECTED_TYPE, message: "listId error (expected Int)" });
+		return;
+	}
+	try {
+		const tasks = await prisma.task.findMany({
+			where: {
+				listId: listId,
+			},
+		});
+		res.json(tasks);
+	} catch (error) {
+		sendPrismaErrorResponse(res, {
+			code: ERROR_CODE_DBCONN_FAILED,
+			message: "Database connection unsuccessful. Please ensure that the database server is running and that the credentials are correct.",
+		});
+	}
+});
 
 app.post('/api/task', async (req, res) => {
     const { description, complete } = req.body;
