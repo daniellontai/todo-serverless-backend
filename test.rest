@@ -8,19 +8,40 @@ http://localhost:3000/api/
 
 
 
+### post new list
+POST http://localhost:3000/api/list
+content-type: application/json
+
+{
+    "name": "List"
+}
+
+
+
+### get lists
+http://localhost:3000/api/lists
+
+
+
+### get tasks of list
+http://localhost:3000/api/tasks/clursn4i20001jp3jmckwu2a8
+
+
+
 ### post new task
 POST http://localhost:3000/api/task
 content-type: application/json
 
 {
     "description": "Lorem ipsum dolor set amet5",
-    "complete": false
+    "complete": false,
+    "listId": "clursn4i20001jp3jmckwu2a8"
 }
 
 
 
 ### get tasks
-http://localhost:3000/api/tasks
+###http://localhost:3000/api/tasks
 
 
 
