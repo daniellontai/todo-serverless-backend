@@ -61,7 +61,7 @@ app.get('/api/lists', async (req, res) => {
 	try {
 		const lists = await prisma.list.findMany({
 			orderBy: {
-				id: 'desc',
+				createdAt: 'asc',
 			},
 		});
 		res.json(lists);
@@ -99,10 +99,10 @@ app.post('/api/list', async (req, res) => {
 app.get('/api/tasks/:list', async (req, res) => {
 	let listId = req.params.list;
 
-	if (typeof listId !== 'string' || listId.length < 22 || listId.length > 28) {
+	if (!isValidCuid(listId)) {
 		sendBadDataErrorResponse(res, {
 			code: ERROR_CODE_UNEXPECTED_TYPE,
-			message: 'listId error (expected String with length between 22 and 28 characters.) [GET api/tasks/:list]',
+			message: 'listId error (expected cuid) [GET api/tasks/:list]',
 		});
 		return;
 	}
@@ -131,8 +131,8 @@ app.post('/api/task', async (req, res) => {
 	if (typeof complete !== 'boolean') {
 		errors.push({ code: ERROR_CODE_COMPLETE_NOT_SET, message: 'complete not set (expected Boolean) [POST api/task]' });
 	}
-	if (typeof listId !== 'string' || listId.length < 22 || listId.length > 28) {
-		errors.push({ code: ERROR_CODE_UNEXPECTED_TYPE, message: 'listId error (expected String with length between 22 and 28 characters.) [POST api/task]' });
+	if (!isValidCuid(listId)) {
+		errors.push({ code: ERROR_CODE_UNEXPECTED_TYPE, message: 'listId error (expected cuid.) [POST api/task]' });
 	}
 	if (errors.length > 0) {
 		sendBadDataErrorResponse(res, errors);
@@ -256,4 +256,8 @@ function sendPrismaErrorResponse(response, error) {
 
 function sendBadDataErrorResponse(response, error) {
 	sendErrorResponse(response, error, 400);
+}
+
+function isValidCuid(str) {
+	return str.length > 0 && str.charAt(0) === 'c' && str.length >= 7;
 }
