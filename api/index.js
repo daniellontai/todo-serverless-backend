@@ -131,7 +131,7 @@ app.post('/api/task', async (req, res) => {
 	if (typeof complete !== 'boolean') {
 		errors.push({ code: ERROR_CODE_COMPLETE_NOT_SET, message: 'complete not set (expected Boolean) [POST api/task]' });
 	}
-	if (!isValidCuid(listId)) {
+	if (typeof listId !== 'string' || !isValidCuid(listId)) {
 		errors.push({ code: ERROR_CODE_UNEXPECTED_TYPE, message: 'listId error (expected cuid.) [POST api/task]' });
 	}
 	if (errors.length > 0) {
