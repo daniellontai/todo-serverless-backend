@@ -121,6 +121,35 @@ app.get('/api/tasks/:list', async (req, res) => {
 	}
 });
 
+app.delete('/api/list/:id', async (req, res) => {
+	if (!isValidCuid(req.params.id)) {
+		sendBadDataErrorResponse(res, {
+			code: ERROR_CODE_UNEXPECTED_TYPE,
+			message: 'listId error (expected cuid) [DELETE api/list/:id]',
+		});
+		return;
+	}
+	try {
+		const deleteTasks = await prisma.task.deleteMany({
+			where: {
+				listId: req.params.id,
+			},
+		});
+		const deleteList = await prisma.list.delete({
+			where: {
+				id: req.params.id,
+			},
+		});
+		res.json({ deleteList, deleteTasks });
+	} catch (error) {
+		console.log(error);
+		sendPrismaErrorResponse(res, {
+			code: ERROR_CODE_DBCONN_FAILED,
+			message: 'Database connection unsuccessful. Please ensure that the database server is running and that the credentials are correct. [DELETE api/list/:id]',
+		});
+	}
+});
+
 app.post('/api/task', async (req, res) => {
 	const { description, complete, listId } = req.body;
 
@@ -237,7 +266,7 @@ app.listen(process.env.NODE_PORT || 3000, () => {
 	console.log(`Application listening on port ${process.env.NODE_PORT || 3000}`);
 });
 
-console.log(app);
+//console.log(app);
 //module.exports = app;
 
 function sendErrorResponse(response, error, statusCode) {

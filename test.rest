@@ -13,7 +13,7 @@ POST http://localhost:3000/api/list
 content-type: application/json
 
 {
-    "name": "List2"
+    "name": "List99"
 }
 
 
@@ -25,6 +25,9 @@ http://localhost:3000/api/lists
 
 ### get tasks of list
 http://localhost:3000/api/tasks/clursn4i20001jp3jmckwu2a8
+
+### delete tasklist by id
+DELETE http://localhost:3000/api/list/clusu4bql0009k34m52ehiser
 
 
 
