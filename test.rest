@@ -29,7 +29,13 @@ http://localhost:3000/api/tasks/clursn4i20001jp3jmckwu2a8
 ### delete tasklist by id
 DELETE http://localhost:3000/api/list/clusu4bql0009k34m52ehiser
 
+### patch tasklist by id
+PATCH http://localhost:3000/api/list/clwvyvjm6000ixie2xnvk4am7
+content-type: application/json
 
+{
+    "name": "New Name"
+}
 
 ### post new task
 POST http://localhost:3000/api/task

@@ -150,6 +150,38 @@ app.delete('/api/list/:id', async (req, res) => {
 	}
 });
 
+app.patch('/api/list/:id', async (req, res) => {
+	const { name } = req.body;
+	console.log(name);
+	if (!isValidCuid(req.params.id)) {
+		sendBadDataErrorResponse(res, {
+			code: ERROR_CODE_UNEXPECTED_TYPE,
+			message: 'listId error (expected cuid) [PATCH api/list/:id]',
+		});
+		return;
+	}
+	if (typeof name !== 'string') {
+		sendBadDataErrorResponse(res, { code: ERROR_CODE_UNEXPECTED_TYPE, message: 'name error (expected String) [PATCH api/list/:id]' });
+		return;
+	}
+	try {
+		const list = await prisma.list.update({
+			where: {
+				id: req.params.id,
+			},
+			data: {
+				name: name,
+			},
+		});
+		res.json(list);
+	} catch (error) {
+		sendPrismaErrorResponse(res, {
+			code: ERROR_CODE_DBCONN_FAILED,
+			message: 'Database connection unsuccessful. Please ensure that the database server is running and that the credentials are correct. [PATCH api/list/:id]',
+		});
+	}
+});
+
 app.post('/api/task', async (req, res) => {
 	const { description, complete, listId } = req.body;
 
