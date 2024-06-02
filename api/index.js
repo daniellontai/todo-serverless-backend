@@ -294,12 +294,12 @@ app.delete('/api/task/:id', async (req, res) => {
 	}
 });
 
-app.listen(process.env.NODE_PORT || 3000, () => {
-	console.log(`Application listening on port ${process.env.NODE_PORT || 3000}`);
-});
+// app.listen(process.env.NODE_PORT || 3000, () => {
+// 	console.log(`Application listening on port ${process.env.NODE_PORT || 3000}`);
+// });
 
 //console.log(app);
-//module.exports = app;
+module.exports = app;
 
 function sendErrorResponse(response, error, statusCode) {
 	let errorToSend;
