@@ -18,8 +18,8 @@ app.use(express.json());
 // Add CORS
 app.use(
 	cors({
-		//origin: /^https:\/\/todo-react-frontend-teal\.vercel\.app(\/.*)?$/,
-		origin: 'http://localhost:3001',
+		origin: /^https:\/\/todo-react-frontend-teal\.vercel\.app(\/.*)?$/,
+		//origin: 'http://localhost:3001',
 		methods: 'GET,OPTIONS,PATCH,DELETE,POST',
 		allowedHeaders: 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version',
 		credentials: true,
